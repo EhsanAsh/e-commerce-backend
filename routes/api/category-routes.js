@@ -7,6 +7,7 @@ const { Category, Product } = require('../../models');
 router.get('/', async (req, res) => {
 
   try {
+
     const categoryData = await Category.findAll({
       include: [{ model: Product }],
       order: [['id', 'ASC']]
@@ -14,9 +15,10 @@ router.get('/', async (req, res) => {
 
     if (!categoryData) {
       res.status(404).json({ message: 'No categories found!' });
+      return;
     }
+    res.status(200).json({ message: 'Category data found!', categoryData });
 
-    res.status(200).json({message: 'Category data found!', categoryData});
   } catch (err) {
     res.status(500).json({message: 'Error retrieving category data!', err});
   }
@@ -27,6 +29,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
 
   try {
+
     const categoryData = await Category.findByPk(req.params.id, {
       include: [{ model: Product }],
       order: [['id', 'ASC']],
@@ -34,9 +37,10 @@ router.get('/:id', async (req, res) => {
 
     if (!categoryData) {
       res.status(404).json({ message: 'No categories found!' });
+      return;
     }
+    res.status(200).json({ message: 'Category data found!', categoryData });
 
-    res.status(200).json({message: 'Category data found!', categoryData});
   } catch (err) {
     res.status(500).json({message: 'Error retrieving category data!', err});
   }
