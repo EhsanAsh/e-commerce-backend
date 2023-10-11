@@ -50,9 +50,9 @@ router.post('/', async (req, res) => {
 
   try {
 
-    const tagData = await Tag.create(req.body);
+    const tagData = await Tag.create({ tag_name: req.body.tag_name });
 
-    if (req.body.productIds.length) {
+    if (req.body.productIds && req.body.productIds.length) {
       const productTagIdArr = req.body.productIds.map((product_id) => {
         return {
           tag_id: tagData.id,
@@ -60,13 +60,13 @@ router.post('/', async (req, res) => {
         };
       });
       const productTagIds = await ProductTag.bulkCreate(productTagIdArr);
-      res.status(200).json({ message: 'Tag created!', tagData, productTagIds });
-    } else {
-      res.status(200).json({ message: 'Tag created!', tagData });
+      return res.status(200).json({ message: 'Tag created!', tagData, productTagIds });
     }
+    return res.status(200).json({ message: 'Tag created!', tagData });
 
   } catch (err) {
-    res.status(500).json({ message: 'Error creating tag!', err });
+    console.error(err);
+    return res.status(500).json({ message: 'Error creating tag!', err: err.message });
   }
 
 });
